@@ -30,9 +30,11 @@ function createSongElement({ id, title, album, artist, duration, coverArt }) {
     let spanAlbum = createElement("span", [album], ["data-cell", "song-album"])
     let spanArtist = createElement("span", [artist], ["data-cell", "song-artist"])
     let spanDuration = createElement("span", [convertSecondsToMinutes(duration)], ["data-cell", "song-duration"])
-    let spanPlay = createElement("a", ["Play"], ["play-button"], { href: "#" })
+    let buttonPlay = createElement("button", ["Play"], ["play-button"])
+    let buttonRemove = createElement("button", ["Remove"], ["remove-button"])
+    let secretId = createElement("span", [id], ["secret-id"], { hidden: true })
 
-    const children = [spanWithImg, spanTitle, spanAlbum, spanArtist, spanDuration, spanPlay]
+    const children = [spanWithImg, spanTitle, spanAlbum, spanArtist, spanDuration, buttonPlay, buttonRemove, secretId]
     const classes = ["song-data-container"]
     const attrs = { onclick: `playSong(${id})` }
 
@@ -212,7 +214,24 @@ function handleForm(event) {
     renderLists(player.songs, player.playlists)
 }
 /********************************* Utility Functions *********************************/
+function getSongIndexById(id) {
+    let song = getSongById(id)
+    return player.songs.indexOf(song)
+}
 
+function removeSong(id) {
+    //remove song from songs
+    player.songs.splice(getSongIndexById(id), 1)
+
+    // remove from playlists
+    // for (let playlist of player.playlists) {
+    //     for (let songID of playlist.songs) {
+    //         if (songID === id) {
+    //             playlist.songs.splice(playlist.songs.indexOf(id), 1)
+    //         }
+    //     }
+    // }
+}
 //gets number (i) and goes through all the songs / playlists to see if anyone has it. if not, it is considered avaliable.
 function getVacantId(array) {
     mainLoop: for (let i = 1; i <= array.length + 1; i++) {
@@ -252,3 +271,21 @@ function clearElement(element) {
         element.removeChild(element.firstChild)
     }
 }
+
+function handleClick(event) {
+    console.log(event.target)
+
+    if (event.target.innerText === "Remove") {
+        console.log("I want to remove")
+        let parentElement = event.target.parentElement
+        let songIdToRemove = parentElement.lastChild.innerText
+        console.log(songIdToRemove)
+        removeSong(parseInt(songIdToRemove))
+    }
+}
+
+const songsContainer = document.getElementById("songs-container")
+songsContainer.addEventListener("click", handleClick)
+
+//where we left off:
+//we got the remove funtionalliy to work. meaning that pressing remove will remove it from the player. but, we need to refresh the song list after we hit remove.
