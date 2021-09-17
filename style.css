@@ -307,6 +307,76 @@ button {
 }
 /* END MY PLAYLISTS SECTION STYLING */
 
+/* START ADD MODAL STYLING */
+.modal-background {
+    height: 100%;
+    width: 100%;
+    background-color: rgb(0, 0, 0, 0.4);
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.modal-box {
+    height: 500px;
+    width: 800px;
+    margin: 10% auto;
+    background-color: rgb(69, 48, 97);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-content: center;
+    color: white;
+    font-family: "Rubik";
+}
+
+.modal-title-container {
+    margin: 1rem;
+}
+
+.modal-title-container h1 {
+    color: white;
+    font-family: "Rubik";
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: flex-start;
+    align-content: center;
+}
+
+.modal-radio-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 30px;
+}
+
+.add-info-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.add-info-form {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-content: flex-start;
+}
+
+.input-item {
+    margin: 20px 50px;
+}
+
+/* END ADD MODAL STYLING */
+
 /* START UTILITY CLASSES STYLING */
 
 .hide-section {

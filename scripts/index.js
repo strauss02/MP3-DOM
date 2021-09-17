@@ -157,6 +157,10 @@ function showPlaylists() {
     playlistsSection.classList.toggle("hide-section")
 }
 
+function showAddModal() {
+    let addModal = document.querySelector(".modal")
+}
+
 function sortTitlesAlphabetically(a, b) {
     return a.title.localeCompare(b.title)
 }
