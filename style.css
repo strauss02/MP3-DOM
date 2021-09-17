@@ -361,6 +361,7 @@ button {
     height: 100%;
     display: flex;
     justify-content: flex-start;
+    padding: 10px;
 }
 
 .add-info-form {
@@ -373,6 +374,12 @@ button {
 
 .input-item {
     margin: 20px 50px;
+}
+
+.add-cover-img {
+    padding: 20px;
+    background-color: rgb(0, 0, 0, 0.4);
+    width: 40%;
 }
 
 /* END ADD MODAL STYLING */

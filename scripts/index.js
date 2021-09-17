@@ -171,3 +171,35 @@ function sortNameAlphabetically(a, b) {
 
 renderLists(player.songs, player.playlists)
 styleEverySecondRow(document.getElementById("songs-container"))
+
+//Handle form
+
+function handleForm(event) {
+    const allInputs = document.querySelectorAll("input")
+    console.log(allInputs)
+
+    const newSongTitle = allInputs[2].value
+    const newSongArtist = allInputs[3].value
+    const newSongAlbum = allInputs[4].value
+    const newSongduration = allInputs[5].value
+    const newSongId = 999
+    const newSongImage = allInputs[7].value
+
+    addSong(newSongTitle, newSongAlbum, newSongArtist, newSongduration, newSongId, newSongImage)
+    console.log(player.songs)
+
+    renderLists(player.songs, player.playlists)
+}
+
+function addSong(title, album, artist, duration, id, coverImage) {
+    let newSong = {
+        id: id,
+        title: title,
+        album: album,
+        artist: artist,
+        duration: duration,
+        coverArt: coverImage,
+    }
+    player.songs.push(newSong)
+    return newSong.id
+}

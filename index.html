@@ -99,14 +99,15 @@
     <!-- END BOTTOM BAR -->
 
     <!-- START ADD MODAL-->
-    <div class="modal-background">
+    <div hidden class="modal-background">
         <div class="modal-box">
             <div class="modal-title-container">
                 <h1>what would you like to add?</h1>
             </div>
             <div class="modal-form">
+                <form action=""></form>
                 <div class="modal-radio-container">
-                    <form action="">
+                    <form action="" oninput="submitModal">
                         <input type="radio" id="song-radio-button" name="item" value="song" checked>
                         <label for="song-radio-button">a new song</label>
                         <input type="radio" id="playlist-radio-button" name="item" value="playlist"">
@@ -117,25 +118,30 @@
 
                     <div class="add-info-form">
                         <div class="input-item">
-                            <label for="input-song-name">name</label>
-                            <input type="text" id="input-song-name">
+                            <label for="input-song-title">name</label>
+                            <input name="title" type="text" id="input-song-title">
                         </div>
                         <div class="input-item">
-                            <label for="input-song-name">artist</label>
-                            <input type="text" id="input-song-name">
+                            <label for="input-song-artist">artist</label>
+                            <input name="artist" type="text" id="input-song-artist">
                         </div>
                         <div class="input-item">
-                            <label for="input-song-name">album</label>
-                            <input type="text" id="input-song-name">
+                            <label for="input-song-album">album</label>
+                            <input name="album" type="text" id="input-song-album">
                         </div>
                         <div class="input-item">
-                            <label for="input-song-name">duration</label>
-                            <input type="text" id="input-song-name">
+                            <label for="input-song-duration">duration</label>
+                            <input name="duration" type="text" id="input-song-duration">
+                        </div>
+                        <div class="input-item">
+                            <input type="submit" onclick="handleForm()" value="add song">
                         </div>
                     </div>
 
                     <div class="add-cover-img">
-                        
+                        <label for="song-img-src">image source</label>
+                        <input type="text" name="img-src" id="song-img-src">
+                        <img src="" alt="">
                     </div>
                 </div>
             </div>
