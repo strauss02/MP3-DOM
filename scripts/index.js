@@ -108,7 +108,9 @@ function convertSecondsToMinutes(time) {
 }
 
 function renderLists(songs, playlists) {
-    for (song of songs) {
+    const sortedSongs = songs.sort(sortTitlesAlphabetically)
+
+    for (song of sortedSongs) {
         songElement = createSongElement({
             id: song.id,
             title: song.title,
@@ -144,6 +146,10 @@ function showPlaylists() {
     songsSection.classList.toggle("hide-section")
     let playlistsSection = document.getElementById("playlists-section")
     playlistsSection.classList.toggle("hide-section")
+}
+
+function sortTitlesAlphabetically(a, b) {
+    return a.title.localeCompare(b.title)
 }
 
 renderLists(player.songs, player.playlists)
