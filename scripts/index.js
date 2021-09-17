@@ -158,7 +158,8 @@ function showPlaylists() {
 }
 
 function showAddModal() {
-    let addModal = document.querySelector(".modal")
+    let addModal = document.querySelector(".modal-background")
+    addModal.classList.toggle("hide-section")
 }
 
 function sortTitlesAlphabetically(a, b) {
@@ -203,3 +204,5 @@ function addSong(title, album, artist, duration, id, coverImage) {
     player.songs.push(newSong)
     return newSong.id
 }
+
+/************************ Utility Functions *********************************/

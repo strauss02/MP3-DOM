@@ -27,7 +27,7 @@
             <p  onclick="showPlaylists()">playlists</p>
         </section>
         <section class="sidebar-item">
-            <p  onclick="showAddModule()">add stuff</p>
+            <p  onclick="showAddModal()">add stuff</p>
         </section>
         <section class="sidebar-album-cover">
             <img class="sidebar-pic" src="" alt="">
@@ -99,10 +99,13 @@
     <!-- END BOTTOM BAR -->
 
     <!-- START ADD MODAL-->
-    <div hidden class="modal-background">
+    <div class="modal-background hide-section">
         <div class="modal-box">
             <div class="modal-title-container">
                 <h1>what would you like to add?</h1>
+                <a href="#" onclick="showAddModal()" class="exit-button">
+                    <i class="fas fa-times"></i>
+                </a>
             </div>
             <div class="modal-form">
                 <form action=""></form>
