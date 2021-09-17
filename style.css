@@ -15,6 +15,11 @@ button {
     border: none;
 }
 
+a {
+    color: white;
+    text-decoration: none;
+}
+
 /* START FONT AWESOME STYLING */
 .fas {
     color: white;
