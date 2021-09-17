@@ -99,6 +99,13 @@ function getSongById(id) {
     throw new Error(`Whoops! we couldn't find a song that matches the ID you entered. Song ID entered: ${id}`)
 }
 
+function styleEverySecondRow(songsEl) {
+    const songRows = songsEl.children
+    for (i = 0; i < songRows.length; i += 2) {
+        songRows.item(i).classList.add("dark-row")
+    }
+}
+
 function convertSecondsToMinutes(time) {
     let minutes = Math.floor(time / 60)
     let seconds = time - minutes * 60
@@ -123,7 +130,9 @@ function renderLists(songs, playlists) {
         songsList.append(songElement)
     }
 
-    for (let playlist of playlists) {
+    const sortedPlaylists = playlists.sort(sortNameAlphabetically)
+
+    for (let playlist of sortedPlaylists) {
         playlistElement = createPlaylistElement({
             id: playlist.id,
             name: playlist.name,
@@ -152,4 +161,9 @@ function sortTitlesAlphabetically(a, b) {
     return a.title.localeCompare(b.title)
 }
 
+function sortNameAlphabetically(a, b) {
+    return a.name.localeCompare(b.name)
+}
+
 renderLists(player.songs, player.playlists)
+styleEverySecondRow(document.getElementById("songs-container"))
