@@ -257,7 +257,7 @@ button {
 }
 
 /* START MY PLAYLISTS SECTION */
-#playlists {
+#playlists-container {
     padding: 1rem 3rem;
     display: flex;
     flex-direction: row;

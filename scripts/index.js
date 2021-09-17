@@ -127,7 +127,7 @@ function renderLists(songs, playlists) {
             name: playlist.name,
             songs: playlist.songs,
         })
-        let playlistList = document.getElementById("playlists")
+        let playlistList = document.getElementById("playlists-container")
         playlistList.append(playlistElement)
     }
 }
