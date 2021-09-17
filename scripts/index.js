@@ -117,7 +117,7 @@ function renderLists(songs, playlists) {
             duration: song.duration,
             coverArt: song.coverArt,
         })
-        let songsList = document.getElementById("songs")
+        let songsList = document.getElementById("songs-container")
         songsList.append(songElement)
     }
 
