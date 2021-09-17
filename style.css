@@ -1,4 +1,3 @@
-/* Your code here */
 * {
     box-sizing: border-box;
 }
@@ -16,14 +15,23 @@ button {
     border: none;
 }
 
+/* START FONT AWESOME STYLING */
 .fas {
     color: white;
 }
+/* END FONT AWESOME STYLING */
 
-.hide-button {
-    display: none;
+/* START SECTION STYLING */
+.page-section {
+    height: 100vh;
+    width: 77%;
+    position: absolute;
+    right: 0;
+    top: 0;
 }
+/* END SECTION STYLING */
 
+/* START BOTTOM BAR STYLING */
 .bar {
     position: fixed;
     left: 0;
@@ -110,10 +118,16 @@ button {
     align-items: center;
 }
 
+/* a class for any button that controls the playback */
 .control-button {
     height: 2rem;
     width: 2rem;
     margin: 0 1rem;
+}
+
+/* this class toggles the display of either the play button or the pause button, depending on whether something is being played or not */
+.hide-button {
+    display: none;
 }
 
 .bar-timebar {
@@ -136,6 +150,9 @@ button {
     margin: 0 5px;
 }
 
+/* END BOTTOM BAR STYLING */
+
+/* START SIDEBAR STYLING */
 .sidebar {
     background-color: rgb(32, 20, 44);
     position: fixed;
@@ -148,6 +165,12 @@ button {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+}
+
+.sidebar-album-cover {
+    width: 100%;
+    bottom: 9rem;
+    position: absolute;
 }
 
 .sidebar-pic {
@@ -163,26 +186,9 @@ button {
     color: white;
 }
 
-.sidebar-album-cover {
-    width: 100%;
-    bottom: 9rem;
-    position: absolute;
-    bottom: 9rem;
-}
+/* END SIDEBAR STYLING */
 
-.sidebar-pic {
-    width: 100%;
-}
-
-.page-section {
-    height: 100vh;
-    width: 77%;
-    position: absolute;
-    right: 0;
-    top: 0;
-}
-
-/* START MY SONGS SECTION */
+/* START MY SONGS SECTION STYLING */
 .my-songs {
     display: flex;
     flex-direction: column;
@@ -250,13 +256,9 @@ button {
     padding: 0 0.9rem;
 }
 
-/* END MY SONG SECTION */
+/* END MY SONG SECTION STYLING */
 
-.hide-section {
-    display: none;
-}
-
-/* START MY PLAYLISTS SECTION */
+/* START MY PLAYLISTS SECTION STYLING */
 #playlists-container {
     padding: 1rem 3rem;
     display: flex;
@@ -297,3 +299,12 @@ button {
 .card-playlist-duration {
     height: 15%;
 }
+/* END MY PLAYLISTS SECTION STYLING */
+
+/* START UTILITY CLASSES STYLING */
+
+.hide-section {
+    display: none;
+}
+
+/* END UTILITY CLASSES STYLING */
