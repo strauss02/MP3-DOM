@@ -54,7 +54,7 @@ function createPlaylistElement({ id, name, songs, duration }) {
 
     let infoText = createElement("p", [name], [])
 
-    let durationText = createElement("p", [duration], [])
+    let durationText = createElement("p", [`${duration} | ${songs.length} songs`], [])
 
     let cardPlaylistInfo = createElement("div", [infoText], ["card", "card-playlist-info"])
 
@@ -143,6 +143,7 @@ function renderLists(songs, playlists) {
             id: playlist.id,
             name: playlist.name,
             songs: playlist.songs,
+            duration: convertSecondsToMinutes(playlistDuration(playlist.id)),
         })
         let playlistList = document.getElementById("playlists-container")
         playlistList.append(playlistElement)
@@ -299,9 +300,6 @@ function handleClick(event) {
 const songsContainer = document.getElementById("songs-container")
 songsContainer.addEventListener("click", handleClick)
 
-//where we left off:
-//we got the remove funtionalliy to work. meaning that pressing remove will remove it from the player. but, we need to refresh the song list after we hit remove.
-
 function playNothing() {
     let songInfo = document.getElementsByClassName("song-details")
     let timeMark = document.getElementsByClassName("time-mark")
@@ -312,4 +310,24 @@ function playNothing() {
     songInfo[0].innerText = "nothing is being played"
     songInfo[1].innerText = ""
     songInfo[2].innerText = ""
+}
+
+function getPlaylistById(id) {
+    assertIsNumber(id)
+    for (let playlist of player.playlists) {
+        if (playlist.id === id) {
+            return playlist
+        }
+    }
+    throw new Error(`Hmmm.. There's no playlist with that ID. The playlist ID entered: ${id}`)
+}
+
+function playlistDuration(id) {
+    let playlist = getPlaylistById(id)
+    let totalDuration = 0
+    for (let song of playlist.songs) {
+        let songDuration = getSongById(song).duration
+        totalDuration += songDuration
+    }
+    return totalDuration
 }
