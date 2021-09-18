@@ -36,7 +36,7 @@ function createSongElement({ id, title, album, artist, duration, coverArt }) {
 
     const children = [spanWithImg, spanTitle, spanAlbum, spanArtist, spanDuration, buttonPlay, buttonRemove, secretId]
     const classes = ["song-data-container"]
-    const attrs = { onclick: `playSong(${id})` }
+    const attrs = {}
 
     return createElement("div", children, classes, attrs)
 }
@@ -281,6 +281,13 @@ function handleClick(event) {
         let songIdToRemove = parentElement.lastChild.innerText
         console.log(songIdToRemove)
         removeSong(parseInt(songIdToRemove))
+        renderLists(player.songs, player.playlists)
+    } else if (event.target.innerText === "Play") {
+        console.log("I want to play" + event.target.parentElement)
+        let parentElement = event.target.parentElement
+        let songIdToPlay = parentElement.lastChild.innerText
+        console.log(songIdToPlay)
+        playSong(parseInt(songIdToPlay))
     }
 }
 
