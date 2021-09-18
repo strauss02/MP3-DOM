@@ -177,7 +177,7 @@ a {
 .sidebar-item {
     flex-basis: 7rem;
     font-family: "Rubik";
-    font-size: 4vw;
+    font-size: clamp(1rem, 3vw, 9rem);
     margin-left: 2rem;
     color: white;
 }

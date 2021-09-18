@@ -47,8 +47,8 @@ function createSongElement({ id, title, album, artist, duration, coverArt }) {
  * Creates a playlist DOM element based on a playlist object.
  */
 
-function createPlaylistElement({ id, name, songs, duration }) {
-    let cardImg = createElement("img", [], ["card-album-img"], { src: "./images/playlist.png" })
+function createPlaylistElement({ id, name, songs, duration, coverArt }) {
+    let cardImg = createElement("img", [], ["card-album-img"], { src: coverArt })
 
     let cardImgContainer = createElement("div", [cardImg], ["card", "card-album-img-container"])
 
@@ -94,6 +94,9 @@ function createElement(tagName, children = [], classes = [], attributes = {}) {
     }
     return newElement
 }
+
+//what going on is that when playlists try to get rendered, the get fucked cus we tryna get the songs in them, but if a song was deleted from player, then we cannot get the id to compute duration and display count.
+//so what we need to do it immidietly delete those songs from the player, and only then should the playlists attempt render.
 
 function getSongById(id) {
     for (let song of player.songs) {
@@ -151,11 +154,23 @@ function renderLists(songs, playlists) {
             name: playlist.name,
             songs: playlist.songs,
             duration: convertSecondsToMinutes(playlistDuration(playlist.id)),
+            coverArt: playlist.coverArt,
         })
         playlistList.append(playlistElement)
     }
 
     styleEverySecondRow(document.getElementById("songs-container"))
+
+    const durationElements = document.querySelectorAll(".song-duration")
+    colorByDuration(durationElements)
+}
+
+function colorByDuration(elements) {
+    for (element of elements) {
+        let duration = convertMinutesToSeconds(element.innerText)
+        let color = scaleDurationColor(duration)
+        element.style.color = color
+    }
 }
 
 function showSongs() {
@@ -351,4 +366,32 @@ function playlistDuration(id) {
 function removePlaylist(id) {
     let playlist = getPlaylistById(id)
     player.playlists.splice(player.playlists.indexOf(playlist), 1)
+}
+
+const playButton = document.querySelector(".play-button")
+
+function convertMinutesToSeconds(time) {
+    //mmssRe matches mm:ss and allows more than two minute digits.
+    let mmssRe = new RegExp(/(^\d{2,})[:](\d{2}$)/)
+    let matches = time.match(mmssRe)
+    if (!matches) {
+        throw new Error(`Oy vey! time entered has to be in the mm:ss format! Time entered: ${time}`)
+    }
+
+    let seconds = parseInt(matches[2])
+    let minutes = parseInt(matches[1])
+    return seconds + minutes * 60
+}
+
+function scaleDurationColor(duration) {
+    if (duration < 120) {
+        return "green"
+    }
+    if (duration > 420) {
+        return "red"
+    }
+    const COLOR_RANGE = 300
+    let quotient = (duration / COLOR_RANGE) * 100
+    let color = `hsl(${quotient}, 100%, 50%)`
+    return color
 }
