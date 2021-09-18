@@ -1,4 +1,4 @@
-/****************** Constants ******************/
+/****************** Constants & Globals ******************/
 
 const songsContainer = document.getElementById("songs-container")
 
@@ -393,19 +393,16 @@ forwardButton.addEventListener("click", handleForward)
 backwardsButton.addEventListener("click", handleBackwards)
 
 function handleForward() {
-    console.log("forward")
     playNextInPlaylist()
 }
 
 function handleBackwards() {
-    console.log("backWards")
     changeSong()
     playSong(songBeingPlayed.id)
 }
 
 function handleForm(event) {
     const allInputs = document.querySelectorAll("input")
-    console.log(allInputs)
 
     const newSongTitle = allInputs[2].value
     const newSongArtist = allInputs[3].value
@@ -414,19 +411,15 @@ function handleForm(event) {
     const newSongImage = allInputs[7].value
 
     addSong(newSongTitle, newSongAlbum, newSongArtist, newSongduration, undefined, newSongImage)
-    console.log(player.songs)
 
     renderLists(player.songs, player.playlists)
+    showAddModal()
 }
 
 function handleClick(event) {
-    console.log(event.target)
-
     if (event.target.innerText === "Remove") {
-        console.log("I want to remove")
         let parentElement = event.target.parentElement
         let songIdToRemove = parseInt(parentElement.lastChild.innerText)
-        console.log(songIdToRemove)
         removeSong(songIdToRemove)
         handlePause()
         secondCount = 0
@@ -436,16 +429,13 @@ function handleClick(event) {
             playNothing()
         }
     } else if (event.target.innerText === "Play") {
-        console.log("I want to play" + event.target.parentElement)
         let parentElement = event.target.parentElement
         let songIdToPlay = parseInt(parentElement.lastChild.innerText)
-        console.log(songIdToPlay)
         playSong(songIdToPlay)
     }
 }
 
 function handlePause() {
-    console.log("paused switched to true")
     toggleButtons()
     clearInterval(globalInterval)
 }
@@ -459,7 +449,6 @@ function resumePlayback() {
     if (pauseButton.classList.contains("hide-button")) {
         toggleButtons()
     }
-    //if song was changed, back to 0
     globalInterval = setInterval(addCount, 1000)
 }
 
@@ -470,18 +459,14 @@ function addCount() {
 
     secondCount++
     let quotient = secondCount / songBeingPlayed.duration
-    console.log(secondCount + " " + songBeingPlayed.duration + " " + quotient)
     let ProgressBarCompletedLength = quotient * 100
     let progressbarDecreasedLength = (1 - quotient) * 100
-    console.log(ProgressBarCompletedLength)
-    console.log(progressbarDecreasedLength)
     completedProgressBar.style.width = `${ProgressBarCompletedLength}%`
     progressBar.style.width = `${progressbarDecreasedLength}%`
     timeMarkStart.innerText = convertSecondsToMinutes(secondCount)
 }
 
 function playNextInPlaylist() {
-    console.log("clicked")
     if (songBeingPlayed.id === 0) {
         playRandom()
         return
@@ -493,11 +478,8 @@ function playNextInPlaylist() {
 
     clearInterval(globalInterval)
     currentSongIndex = getSongIndexById(songBeingPlayed.id)
-    console.log(currentSongIndex)
     let nextSongIndex = currentSongIndex + 1
-    console.log(nextSongIndex)
     let nextSongId = player.songs[nextSongIndex].id
-    console.log(nextSongId)
     playSong(nextSongId)
 }
 
@@ -505,9 +487,7 @@ function playRandom() {
     let randomNum = Math.random()
     let songCount = player.songs.length
     let randomIndex = Math.floor(randomNum * songCount) + 1
-    console.log(randomIndex)
     let randomSong = player.songs[randomIndex]
-    console.log(randomSong)
     playSong(randomSong.id)
 }
 
