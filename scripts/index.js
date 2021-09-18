@@ -1,3 +1,4 @@
+let songBeingPlayed
 /**
  * Plays a song from the player.
  * Playing a song means changing the visual indication of the currently playing song.
@@ -16,9 +17,10 @@ function playSong(songId) {
     songInfo[0].innerText = song.title
     songInfo[1].innerText = song.artist
     songInfo[2].innerText = song.album
+    songBeingPlayed = song
 }
 
-playSong(4)
+playNothing()
 /**
  * Creates a song DOM element based on a song object.
  * coverArt gets file path as argument
@@ -278,16 +280,19 @@ function handleClick(event) {
     if (event.target.innerText === "Remove") {
         console.log("I want to remove")
         let parentElement = event.target.parentElement
-        let songIdToRemove = parentElement.lastChild.innerText
+        let songIdToRemove = parseInt(parentElement.lastChild.innerText)
         console.log(songIdToRemove)
-        removeSong(parseInt(songIdToRemove))
+        removeSong(songIdToRemove)
         renderLists(player.songs, player.playlists)
+        if (songIdToRemove === songBeingPlayed.id) {
+            playNothing()
+        }
     } else if (event.target.innerText === "Play") {
         console.log("I want to play" + event.target.parentElement)
         let parentElement = event.target.parentElement
-        let songIdToPlay = parentElement.lastChild.innerText
+        let songIdToPlay = parseInt(parentElement.lastChild.innerText)
         console.log(songIdToPlay)
-        playSong(parseInt(songIdToPlay))
+        playSong(songIdToPlay)
     }
 }
 
@@ -296,3 +301,15 @@ songsContainer.addEventListener("click", handleClick)
 
 //where we left off:
 //we got the remove funtionalliy to work. meaning that pressing remove will remove it from the player. but, we need to refresh the song list after we hit remove.
+
+function playNothing() {
+    let songInfo = document.getElementsByClassName("song-details")
+    let timeMark = document.getElementsByClassName("time-mark")
+    let songImage = document.getElementsByClassName("sidebar-pic")
+
+    songImage[0].setAttribute("src", "./images/note.png")
+    timeMark[1].innerText = "00:00"
+    songInfo[0].innerText = "nothing is being played"
+    songInfo[1].innerText = ""
+    songInfo[2].innerText = ""
+}
