@@ -266,6 +266,14 @@ a {
     padding: 0 0.9rem;
 }
 
+.remove-button {
+    color: white;
+}
+
+.play-button {
+    color: white;
+}
+
 /* END MY SONG SECTION STYLING */
 
 /* START MY PLAYLISTS SECTION STYLING */
@@ -278,6 +286,7 @@ a {
     align-items: center;
     align-content: flex-start;
     margin-top: -5rem;
+    padding-bottom: 9rem;
 }
 
 .playlist-card {

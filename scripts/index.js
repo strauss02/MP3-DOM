@@ -136,16 +136,22 @@ function renderLists(songs, playlists) {
         songsList.append(songElement)
     }
 
+    let playlistList = document.getElementById("playlists-container")
+    clearElement(playlistList)
     const sortedPlaylists = playlists.sort(sortNameAlphabetically)
 
     for (let playlist of sortedPlaylists) {
+        if (playlist.songs.length === 0) {
+            removePlaylist(playlist.id)
+            continue
+        }
+
         playlistElement = createPlaylistElement({
             id: playlist.id,
             name: playlist.name,
             songs: playlist.songs,
             duration: convertSecondsToMinutes(playlistDuration(playlist.id)),
         })
-        let playlistList = document.getElementById("playlists-container")
         playlistList.append(playlistElement)
     }
 
@@ -227,13 +233,13 @@ function removeSong(id) {
     player.songs.splice(getSongIndexById(id), 1)
 
     // remove from playlists
-    // for (let playlist of player.playlists) {
-    //     for (let songID of playlist.songs) {
-    //         if (songID === id) {
-    //             playlist.songs.splice(playlist.songs.indexOf(id), 1)
-    //         }
-    //     }
-    // }
+    for (let playlist of player.playlists) {
+        for (let songID of playlist.songs) {
+            if (songID === id) {
+                playlist.songs.splice(playlist.songs.indexOf(id), 1)
+            }
+        }
+    }
 }
 //gets number (i) and goes through all the songs / playlists to see if anyone has it. if not, it is considered avaliable.
 function getVacantId(array) {
@@ -284,6 +290,7 @@ function handleClick(event) {
         let songIdToRemove = parseInt(parentElement.lastChild.innerText)
         console.log(songIdToRemove)
         removeSong(songIdToRemove)
+
         renderLists(player.songs, player.playlists)
         if (songIdToRemove === songBeingPlayed.id) {
             playNothing()
@@ -301,15 +308,24 @@ const songsContainer = document.getElementById("songs-container")
 songsContainer.addEventListener("click", handleClick)
 
 function playNothing() {
+    const noSong = {
+        title: "nothing is being played",
+        artist: "",
+        album: "",
+        duration: 0,
+        id: 0,
+        coverArt: "./images/note.png",
+    }
+
     let songInfo = document.getElementsByClassName("song-details")
     let timeMark = document.getElementsByClassName("time-mark")
     let songImage = document.getElementsByClassName("sidebar-pic")
 
-    songImage[0].setAttribute("src", "./images/note.png")
-    timeMark[1].innerText = "00:00"
-    songInfo[0].innerText = "nothing is being played"
-    songInfo[1].innerText = ""
-    songInfo[2].innerText = ""
+    songImage[0].setAttribute("src", noSong.coverArt)
+    timeMark[1].innerText = convertSecondsToMinutes(noSong.duration)
+    songInfo[0].innerText = noSong.title
+    songInfo[1].innerText = noSong.artist
+    songInfo[2].innerText = noSong.album
 }
 
 function getPlaylistById(id) {
@@ -330,4 +346,9 @@ function playlistDuration(id) {
         totalDuration += songDuration
     }
     return totalDuration
+}
+
+function removePlaylist(id) {
+    let playlist = getPlaylistById(id)
+    player.playlists.splice(player.playlists.indexOf(playlist), 1)
 }
