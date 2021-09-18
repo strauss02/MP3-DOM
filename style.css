@@ -177,15 +177,16 @@ a {
 
 .sidebar-item {
     flex-basis: 7rem;
-    font-family: "Rubik";
-
     margin-left: 2rem;
     color: white;
 }
 
-section button {
+.sidebar-text {
     color: white;
     font-size: clamp(1rem, 3vw, 9rem);
+    margin: 1rem;
+    margin-top: 2rem;
+    font-family: "Rubik";
 }
 
 /* END SIDEBAR STYLING */
@@ -272,11 +273,9 @@ section button {
     padding: 0 0.9rem;
 }
 
+.resume-button,
+.play-button,
 .remove-button {
-    color: white;
-}
-
-.play-button {
     color: white;
 }
 

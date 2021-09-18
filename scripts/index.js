@@ -1,4 +1,12 @@
-let songBeingPlayed
+const noSong = {
+    title: "nothing is being played",
+    artist: "",
+    album: "",
+    duration: 0,
+    id: 0,
+    coverArt: "./images/note.png",
+}
+let songBeingPlayed = noSong
 /**
  * Plays a song from the player.
  * Playing a song means changing the visual indication of the currently playing song.
@@ -144,33 +152,24 @@ function renderLists(songs, playlists) {
     const sortedPlaylists = playlists.sort(sortNameAlphabetically)
 
     for (let playlist of sortedPlaylists) {
-        if (playlist.songs.length === 0) {
-            removePlaylist(playlist.id)
-            continue
+        if (playlist.songs.length != 0) {
+            playlistElement = createPlaylistElement({
+                id: playlist.id,
+                name: playlist.name,
+                songs: playlist.songs,
+                duration: convertSecondsToMinutes(playlistDuration(playlist.id)),
+                coverArt: playlist.coverArt,
+            })
+            playlistList.append(playlistElement)
         }
-
-        playlistElement = createPlaylistElement({
-            id: playlist.id,
-            name: playlist.name,
-            songs: playlist.songs,
-            duration: convertSecondsToMinutes(playlistDuration(playlist.id)),
-            coverArt: playlist.coverArt,
-        })
-        playlistList.append(playlistElement)
     }
+
+    deleteEmptyPlaylists(playlists)
 
     styleEverySecondRow(document.getElementById("songs-container"))
 
     const durationElements = document.querySelectorAll(".song-duration")
     colorByDuration(durationElements)
-}
-
-function colorByDuration(elements) {
-    for (element of elements) {
-        let duration = convertMinutesToSeconds(element.innerText)
-        let color = scaleDurationColor(duration)
-        element.style.color = color
-    }
 }
 
 function showSongs() {
@@ -323,14 +322,7 @@ const songsContainer = document.getElementById("songs-container")
 songsContainer.addEventListener("click", handleClick)
 
 function playNothing() {
-    const noSong = {
-        title: "nothing is being played",
-        artist: "",
-        album: "",
-        duration: 0,
-        id: 0,
-        coverArt: "./images/note.png",
-    }
+    songBeingPlayed = noSong
 
     let songInfo = document.getElementsByClassName("song-details")
     let timeMark = document.getElementsByClassName("time-mark")
@@ -381,17 +373,45 @@ function convertMinutesToSeconds(time) {
     return seconds + minutes * 60
 }
 
+function deleteEmptyPlaylists(playlists) {
+    for (playlist of playlists) {
+        if (playlist.songs.length === 0) {
+            removePlaylist(playlist.id)
+        }
+    }
+}
+
 function scaleDurationColor(duration) {
     if (duration < 120) {
-        return "green"
+        return "hsla(100, 100%, 50%, 1)"
     }
     if (duration > 420) {
-        return "red"
+        return "hsla(0, 100%, 50%, 1)"
     }
     const COLOR_RANGE = 300
-    let quotient = (duration / COLOR_RANGE) * 100
+    let quotient = (1 - (duration - 120) / COLOR_RANGE) * 100
     let color = `hsl(${quotient}, 100%, 50%)`
     return color
 }
 
-const playButton = document.querySelector(".play-button")
+function colorByDuration(elements) {
+    for (element of elements) {
+        let duration = convertMinutesToSeconds(element.innerText)
+        let color = scaleDurationColor(duration)
+        element.style.color = color
+    }
+}
+
+const playButton = document.querySelector(".resume-button")
+const timeMarkStart = document.querySelector(".time-start")
+playButton.addEventListener("click", resumePlayback)
+
+let secondCount = 0
+
+function resumePlayback(e) {
+    setInterval(addCount, 1000)
+}
+
+function addCount() {
+    secondCount++
+}
