@@ -8,6 +8,9 @@ const timeMarkStart = document.querySelector(".time-start")
 const completedProgressBar = document.querySelector(".progressbar-completed")
 const progressBar = document.querySelector(".progressbar")
 
+const forwardButton = document.querySelector(".forward-button")
+const backwardsButton = document.querySelector(".backwards-button")
+
 const songInfo = document.getElementsByClassName("song-details")
 const timeMark = document.getElementsByClassName("time-mark")
 const songImage = document.getElementsByClassName("sidebar-pic")
@@ -386,6 +389,20 @@ songsContainer.addEventListener("click", handleClick)
 playButton.addEventListener("click", resumePlayback)
 pauseButton.addEventListener("click", handlePause)
 
+forwardButton.addEventListener("click", handleForward)
+backwardsButton.addEventListener("click", handleBackwards)
+
+function handleForward() {
+    console.log("forward")
+    playNextInPlaylist()
+}
+
+function handleBackwards() {
+    console.log("backWards")
+    changeSong()
+    playSong(songBeingPlayed.id)
+}
+
 function handleForm(event) {
     const allInputs = document.querySelectorAll("input")
     console.log(allInputs)
@@ -411,6 +428,8 @@ function handleClick(event) {
         let songIdToRemove = parseInt(parentElement.lastChild.innerText)
         console.log(songIdToRemove)
         removeSong(songIdToRemove)
+        handlePause()
+        secondCount = 0
 
         renderLists(player.songs, player.playlists)
         if (songIdToRemove === songBeingPlayed.id) {
@@ -462,12 +481,34 @@ function addCount() {
 }
 
 function playNextInPlaylist() {
+    console.log("clicked")
+    if (songBeingPlayed.id === 0) {
+        playRandom()
+        return
+    }
+    if (getSongIndexById(songBeingPlayed.id) >= player.songs.length - 1) {
+        playNothing()
+        return
+    }
+
     clearInterval(globalInterval)
-    currentSongIndex = getSongById(songBeingPlayed.id)
+    currentSongIndex = getSongIndexById(songBeingPlayed.id)
+    console.log(currentSongIndex)
     let nextSongIndex = currentSongIndex + 1
+    console.log(nextSongIndex)
     let nextSongId = player.songs[nextSongIndex].id
     console.log(nextSongId)
     playSong(nextSongId)
+}
+
+function playRandom() {
+    let randomNum = Math.random()
+    let songCount = player.songs.length
+    let randomIndex = Math.floor(randomNum * songCount) + 1
+    console.log(randomIndex)
+    let randomSong = player.songs[randomIndex]
+    console.log(randomSong)
+    playSong(randomSong.id)
 }
 
 /****************** Initialize Page ******************/
