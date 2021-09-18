@@ -1,3 +1,19 @@
+/****************** Constants ******************/
+
+const songsContainer = document.getElementById("songs-container")
+
+const playButton = document.querySelector(".resume-button")
+const pauseButton = document.querySelector(".pause-button")
+const timeMarkStart = document.querySelector(".time-start")
+const completedProgressBar = document.querySelector(".progressbar-completed")
+const progressBar = document.querySelector(".progressbar")
+
+const songInfo = document.getElementsByClassName("song-details")
+const timeMark = document.getElementsByClassName("time-mark")
+const songImage = document.getElementsByClassName("sidebar-pic")
+
+const COLOR_RANGE = 300
+
 const noSong = {
     title: "nothing is being played",
     artist: "",
@@ -6,7 +22,12 @@ const noSong = {
     id: 0,
     coverArt: "./images/note.png",
 }
-let songBeingPlayed = noSong
+
+let secondCount = 0
+let globalInterval
+
+/****************** Main Functions ******************/
+
 /**
  * Plays a song from the player.
  * Playing a song means changing the visual indication of the currently playing song.
@@ -25,10 +46,13 @@ function playSong(songId) {
     songInfo[0].innerText = song.title
     songInfo[1].innerText = song.artist
     songInfo[2].innerText = song.album
+
+    changeSong()
+    resumePlayback()
+
     songBeingPlayed = song
 }
 
-playNothing()
 /**
  * Creates a song DOM element based on a song object.
  * coverArt gets file path as argument
@@ -103,8 +127,25 @@ function createElement(tagName, children = [], classes = [], attributes = {}) {
     return newElement
 }
 
-//what going on is that when playlists try to get rendered, the get fucked cus we tryna get the songs in them, but if a song was deleted from player, then we cannot get the id to compute duration and display count.
-//so what we need to do it immidietly delete those songs from the player, and only then should the playlists attempt render.
+function addSong(title, album, artist, duration, id = getVacantId(player.songs), coverImage) {
+    assertStringNotEmpty(title, album, artist)
+    assertIsNumber(id)
+    assertIdNotUsed(id, player.songs)
+
+    let newSong = {
+        id: id,
+        title: title,
+        album: album,
+        artist: artist,
+        duration: duration,
+        coverArt: coverImage,
+    }
+    player.songs.push(newSong)
+    renderLists(player.songs, player.playlists)
+    return newSong.id
+}
+
+/****************** Utility Functions ******************/
 
 function getSongById(id) {
     for (let song of player.songs) {
@@ -115,11 +156,53 @@ function getSongById(id) {
     throw new Error(`Whoops! we couldn't find a song that matches the ID you entered. Song ID entered: ${id}`)
 }
 
-function styleEverySecondRow(songsEl) {
-    const songRows = songsEl.children
-    for (i = 0; i < songRows.length; i += 2) {
-        songRows.item(i).classList.add("dark-row")
+function getSongIndexById(id) {
+    let song = getSongById(id)
+    return player.songs.indexOf(song)
+}
+
+function getPlaylistById(id) {
+    assertIsNumber(id)
+    for (let playlist of player.playlists) {
+        if (playlist.id === id) {
+            return playlist
+        }
     }
+    throw new Error(`Hmmm.. There's no playlist with that ID. The playlist ID entered: ${id}`)
+}
+
+function playlistDuration(id) {
+    let playlist = getPlaylistById(id)
+    let totalDuration = 0
+    for (let song of playlist.songs) {
+        let songDuration = getSongById(song).duration
+        totalDuration += songDuration
+    }
+    return totalDuration
+}
+
+function removePlaylist(id) {
+    let playlist = getPlaylistById(id)
+    player.playlists.splice(player.playlists.indexOf(playlist), 1)
+}
+
+function deleteEmptyPlaylists(playlists) {
+    for (playlist of playlists) {
+        if (playlist.songs.length === 0) {
+            removePlaylist(playlist.id)
+        }
+    }
+}
+function convertMinutesToSeconds(time) {
+    //mmssRe matches mm:ss and allows more than two minute digits.
+    let mmssRe = new RegExp(/(^\d{2,})[:](\d{2}$)/)
+    let matches = time.match(mmssRe)
+    if (!matches) {
+        throw new Error(`Oy vey! time entered has to be in the mm:ss format! Time entered: ${time}`)
+    }
+    let seconds = parseInt(matches[2])
+    let minutes = parseInt(matches[1])
+    return seconds + minutes * 60
 }
 
 function convertSecondsToMinutes(time) {
@@ -129,6 +212,52 @@ function convertSecondsToMinutes(time) {
     let paddedSeconds = seconds.toString().padStart(2, 0)
     return `${paddedMinutes}:${paddedSeconds}`
 }
+
+function sortTitlesAlphabetically(a, b) {
+    return a.title.localeCompare(b.title)
+}
+
+function sortNameAlphabetically(a, b) {
+    return a.name.localeCompare(b.name)
+}
+
+function playNothing() {
+    songBeingPlayed = noSong
+
+    songImage[0].setAttribute("src", noSong.coverArt)
+    timeMark[1].innerText = convertSecondsToMinutes(noSong.duration)
+    songInfo[0].innerText = noSong.title
+    songInfo[1].innerText = noSong.artist
+    songInfo[2].innerText = noSong.album
+}
+
+function removeSong(id) {
+    //remove song from songs
+    player.songs.splice(getSongIndexById(id), 1)
+
+    // remove from playlists
+    for (let playlist of player.playlists) {
+        for (let songID of playlist.songs) {
+            if (songID === id) {
+                playlist.songs.splice(playlist.songs.indexOf(id), 1)
+            }
+        }
+    }
+}
+
+//gets number (i) and goes through all the songs / playlists to see if anyone has it. if not, it is considered avaliable.
+function getVacantId(array) {
+    mainLoop: for (let i = 1; i <= array.length + 1; i++) {
+        for (let item of array) {
+            if (item.id === i) {
+                continue mainLoop
+            }
+        }
+        return i
+    }
+}
+
+/****************** Render Functions ******************/
 
 function renderLists(songs, playlists) {
     let songsList = document.getElementById("songs-container")
@@ -163,13 +292,42 @@ function renderLists(songs, playlists) {
             playlistList.append(playlistElement)
         }
     }
-
+    let durationElements = document.querySelectorAll(".song-duration")
     deleteEmptyPlaylists(playlists)
-
     styleEverySecondRow(document.getElementById("songs-container"))
-
-    const durationElements = document.querySelectorAll(".song-duration")
     colorByDuration(durationElements)
+}
+
+function scaleDurationColor(duration) {
+    if (duration < 120) {
+        return "hsla(100, 100%, 50%, 1)"
+    }
+    if (duration > 420) {
+        return "hsla(0, 100%, 50%, 1)"
+    }
+    let quotient = (1 - (duration - 120) / COLOR_RANGE) * 100
+    let color = `hsl(${quotient}, 100%, 50%)`
+    return color
+}
+
+function colorByDuration(elements) {
+    for (element of elements) {
+        let duration = convertMinutesToSeconds(element.innerText)
+        let color = scaleDurationColor(duration)
+        element.style.color = color
+    }
+}
+
+function toggleButtons() {
+    playButton.classList.toggle("hide-button")
+    pauseButton.classList.toggle("hide-button")
+}
+
+function styleEverySecondRow(songsEl) {
+    const songRows = songsEl.children
+    for (i = 0; i < songRows.length; i += 2) {
+        songRows.item(i).classList.add("dark-row")
+    }
 }
 
 function showSongs() {
@@ -191,81 +349,7 @@ function showAddModal() {
     addModal.classList.toggle("hide-section")
 }
 
-function sortTitlesAlphabetically(a, b) {
-    return a.title.localeCompare(b.title)
-}
-
-function sortNameAlphabetically(a, b) {
-    return a.name.localeCompare(b.name)
-}
-
-renderLists(player.songs, player.playlists)
-
-//Handle form
-
-function addSong(title, album, artist, duration, id = getVacantId(player.songs), coverImage) {
-    assertStringNotEmpty(title, album, artist)
-    assertIsNumber(id)
-    assertIdNotUsed(id, player.songs)
-
-    let newSong = {
-        id: id,
-        title: title,
-        album: album,
-        artist: artist,
-        duration: duration,
-        coverArt: coverImage,
-    }
-    player.songs.push(newSong)
-    renderLists(player.songs, player.playlists)
-    return newSong.id
-}
-
-function handleForm(event) {
-    const allInputs = document.querySelectorAll("input")
-    console.log(allInputs)
-
-    const newSongTitle = allInputs[2].value
-    const newSongArtist = allInputs[3].value
-    const newSongAlbum = allInputs[4].value
-    const newSongduration = allInputs[5].value
-    const newSongImage = allInputs[7].value
-
-    addSong(newSongTitle, newSongAlbum, newSongArtist, newSongduration, undefined, newSongImage)
-    console.log(player.songs)
-
-    renderLists(player.songs, player.playlists)
-}
-/********************************* Utility Functions *********************************/
-function getSongIndexById(id) {
-    let song = getSongById(id)
-    return player.songs.indexOf(song)
-}
-
-function removeSong(id) {
-    //remove song from songs
-    player.songs.splice(getSongIndexById(id), 1)
-
-    // remove from playlists
-    for (let playlist of player.playlists) {
-        for (let songID of playlist.songs) {
-            if (songID === id) {
-                playlist.songs.splice(playlist.songs.indexOf(id), 1)
-            }
-        }
-    }
-}
-//gets number (i) and goes through all the songs / playlists to see if anyone has it. if not, it is considered avaliable.
-function getVacantId(array) {
-    mainLoop: for (let i = 1; i <= array.length + 1; i++) {
-        for (let item of array) {
-            if (item.id === i) {
-                continue mainLoop
-            }
-        }
-        return i
-    }
-}
+/****************** Assert Functions ******************/
 
 function assertStringNotEmpty(...args) {
     for (let arg of args) {
@@ -295,6 +379,29 @@ function clearElement(element) {
     }
 }
 
+/****************** Event Handlers ******************/
+
+songsContainer.addEventListener("click", handleClick)
+
+playButton.addEventListener("click", resumePlayback)
+pauseButton.addEventListener("click", handlePause)
+
+function handleForm(event) {
+    const allInputs = document.querySelectorAll("input")
+    console.log(allInputs)
+
+    const newSongTitle = allInputs[2].value
+    const newSongArtist = allInputs[3].value
+    const newSongAlbum = allInputs[4].value
+    const newSongduration = allInputs[5].value
+    const newSongImage = allInputs[7].value
+
+    addSong(newSongTitle, newSongAlbum, newSongArtist, newSongduration, undefined, newSongImage)
+    console.log(player.songs)
+
+    renderLists(player.songs, player.playlists)
+}
+
 function handleClick(event) {
     console.log(event.target)
 
@@ -318,100 +425,56 @@ function handleClick(event) {
     }
 }
 
-const songsContainer = document.getElementById("songs-container")
-songsContainer.addEventListener("click", handleClick)
-
-function playNothing() {
-    songBeingPlayed = noSong
-
-    let songInfo = document.getElementsByClassName("song-details")
-    let timeMark = document.getElementsByClassName("time-mark")
-    let songImage = document.getElementsByClassName("sidebar-pic")
-
-    songImage[0].setAttribute("src", noSong.coverArt)
-    timeMark[1].innerText = convertSecondsToMinutes(noSong.duration)
-    songInfo[0].innerText = noSong.title
-    songInfo[1].innerText = noSong.artist
-    songInfo[2].innerText = noSong.album
+function handlePause() {
+    console.log("paused switched to true")
+    toggleButtons()
+    clearInterval(globalInterval)
 }
 
-function getPlaylistById(id) {
-    assertIsNumber(id)
-    for (let playlist of player.playlists) {
-        if (playlist.id === id) {
-            return playlist
-        }
+function changeSong() {
+    clearInterval(globalInterval)
+    secondCount = 0
+}
+
+function resumePlayback() {
+    if (pauseButton.classList.contains("hide-button")) {
+        toggleButtons()
     }
-    throw new Error(`Hmmm.. There's no playlist with that ID. The playlist ID entered: ${id}`)
-}
-
-function playlistDuration(id) {
-    let playlist = getPlaylistById(id)
-    let totalDuration = 0
-    for (let song of playlist.songs) {
-        let songDuration = getSongById(song).duration
-        totalDuration += songDuration
-    }
-    return totalDuration
-}
-
-function removePlaylist(id) {
-    let playlist = getPlaylistById(id)
-    player.playlists.splice(player.playlists.indexOf(playlist), 1)
-}
-
-function convertMinutesToSeconds(time) {
-    //mmssRe matches mm:ss and allows more than two minute digits.
-    let mmssRe = new RegExp(/(^\d{2,})[:](\d{2}$)/)
-    let matches = time.match(mmssRe)
-    if (!matches) {
-        throw new Error(`Oy vey! time entered has to be in the mm:ss format! Time entered: ${time}`)
-    }
-
-    let seconds = parseInt(matches[2])
-    let minutes = parseInt(matches[1])
-    return seconds + minutes * 60
-}
-
-function deleteEmptyPlaylists(playlists) {
-    for (playlist of playlists) {
-        if (playlist.songs.length === 0) {
-            removePlaylist(playlist.id)
-        }
-    }
-}
-
-function scaleDurationColor(duration) {
-    if (duration < 120) {
-        return "hsla(100, 100%, 50%, 1)"
-    }
-    if (duration > 420) {
-        return "hsla(0, 100%, 50%, 1)"
-    }
-    const COLOR_RANGE = 300
-    let quotient = (1 - (duration - 120) / COLOR_RANGE) * 100
-    let color = `hsl(${quotient}, 100%, 50%)`
-    return color
-}
-
-function colorByDuration(elements) {
-    for (element of elements) {
-        let duration = convertMinutesToSeconds(element.innerText)
-        let color = scaleDurationColor(duration)
-        element.style.color = color
-    }
-}
-
-const playButton = document.querySelector(".resume-button")
-const timeMarkStart = document.querySelector(".time-start")
-playButton.addEventListener("click", resumePlayback)
-
-let secondCount = 0
-
-function resumePlayback(e) {
-    setInterval(addCount, 1000)
+    //if song was changed, back to 0
+    globalInterval = setInterval(addCount, 1000)
 }
 
 function addCount() {
+    if (secondCount > songBeingPlayed.duration - 1) {
+        playNextInPlaylist()
+    }
+
     secondCount++
+    let quotient = secondCount / songBeingPlayed.duration
+    console.log(secondCount + " " + songBeingPlayed.duration + " " + quotient)
+    let ProgressBarCompletedLength = quotient * 100
+    let progressbarDecreasedLength = (1 - quotient) * 100
+    console.log(ProgressBarCompletedLength)
+    console.log(progressbarDecreasedLength)
+    completedProgressBar.style.width = `${ProgressBarCompletedLength}%`
+    progressBar.style.width = `${progressbarDecreasedLength}%`
+    timeMarkStart.innerText = convertSecondsToMinutes(secondCount)
 }
+
+function playNextInPlaylist() {
+    clearInterval(globalInterval)
+    currentSongIndex = getSongById(songBeingPlayed.id)
+    let nextSongIndex = currentSongIndex + 1
+    let nextSongId = player.songs[nextSongIndex].id
+    console.log(nextSongId)
+    playSong(nextSongId)
+}
+
+/****************** Initialize Page ******************/
+let songBeingPlayed = noSong
+
+renderLists(player.songs, player.playlists)
+
+playNothing()
+
+/****************** Select Elements ******************/

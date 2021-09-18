@@ -139,7 +139,14 @@ a {
 .progressbar {
     background-color: white;
     height: 5px;
-    width: 60%;
+    width: 100%;
+}
+
+.progressbar-completed {
+    width: 0%;
+    height: 5px;
+    background-color: rgb(141, 138, 175);
+    z-index: 10;
 }
 
 .time-mark {
