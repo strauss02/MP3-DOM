@@ -232,7 +232,7 @@ function handleForm(event) {
     const newSongduration = allInputs[5].value
     const newSongImage = allInputs[7].value
 
-    addSong(newSongTitle, newSongAlbum, newSongArtist, newSongduration, "", newSongImage)
+    addSong(newSongTitle, newSongAlbum, newSongArtist, newSongduration, undefined, newSongImage)
     console.log(player.songs)
 
     renderLists(player.songs, player.playlists)
@@ -368,8 +368,6 @@ function removePlaylist(id) {
     player.playlists.splice(player.playlists.indexOf(playlist), 1)
 }
 
-const playButton = document.querySelector(".play-button")
-
 function convertMinutesToSeconds(time) {
     //mmssRe matches mm:ss and allows more than two minute digits.
     let mmssRe = new RegExp(/(^\d{2,})[:](\d{2}$)/)
@@ -395,3 +393,5 @@ function scaleDurationColor(duration) {
     let color = `hsl(${quotient}, 100%, 50%)`
     return color
 }
+
+const playButton = document.querySelector(".play-button")

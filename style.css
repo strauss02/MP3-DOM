@@ -19,6 +19,7 @@ button {
 a {
     color: white;
     text-decoration: none;
+    cursor: pointer;
 }
 
 /* START FONT AWESOME STYLING */
@@ -177,9 +178,14 @@ a {
 .sidebar-item {
     flex-basis: 7rem;
     font-family: "Rubik";
-    font-size: clamp(1rem, 3vw, 9rem);
+
     margin-left: 2rem;
     color: white;
+}
+
+section button {
+    color: white;
+    font-size: clamp(1rem, 3vw, 9rem);
 }
 
 /* END SIDEBAR STYLING */
@@ -299,8 +305,10 @@ a {
     font-size: 2vw;
     height: 43vh;
     max-height: 15rem;
+    height: clamp(3rem, 20vh, 15rem);
     width: 24vw;
     max-width: 9rem;
+    width: clamp(3rem, 15vw, 9rem);
     margin: 5vw;
     min-width: 15rem;
 }
