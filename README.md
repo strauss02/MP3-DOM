@@ -9,6 +9,7 @@ Once again I have found myself fiddling with extra features and css, so I had le
 check it out now: https://strauss02.github.io/MP3-DOM/#
 
 Features:
+
 🎹 An aesthetic, resizable and responsive app that automatically fits the screen size
 
 🔀 Automatically shuffle when play is pressed while nothing is playing
