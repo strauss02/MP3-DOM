@@ -1,1 +1,437 @@
-/* Your code here */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+}
+
+body {
+    background: linear-gradient(180deg, #423184 0%, #231a38 100%) fixed;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* START FONT AWESOME STYLING */
+.fas {
+    color: white;
+}
+/* END FONT AWESOME STYLING */
+
+/* START BOTTOM BAR STYLING */
+.bar {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: 9rem;
+    width: 100vw;
+    background-color: rgb(16, 11, 32);
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bar-left {
+    flex-basis: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: stretch;
+    height: 100%;
+    order: 0;
+    padding: 1rem;
+}
+
+.bar-song-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.bar-title {
+    width: 100%;
+    height: 20%;
+}
+
+.bar-artist {
+    width: 100%;
+    height: 20%;
+}
+
+.bar-album {
+    width: 100%;
+    height: 20%;
+}
+
+.song-details {
+    font-size: 1.2vw;
+    display: inline;
+    margin-left: 3rem;
+    color: white;
+    margin-top: 1rem;
+    font-family: "Poppins", sans-serif;
+}
+
+.bar-middle {
+    order: 1;
+    flex-basis: 40%;
+    height: 100%;
+}
+
+.bar-right {
+    order: 2;
+    flex-basis: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.volume-slider {
+    background-color: white;
+    height: 5px;
+    width: 60%;
+    margin-left: 20px;
+}
+
+.bar-buttons {
+    display: inline-flex;
+    width: 100%;
+    height: 50%;
+    justify-content: center;
+    align-items: center;
+}
+
+/* a class for any button that controls the playback */
+.control-button {
+    height: 2rem;
+    width: 2rem;
+    margin: 0 1rem;
+}
+
+/* this class toggles the display of either the play button or the pause button, depending on whether something is being played or not */
+.hide-button {
+    display: none;
+}
+
+.bar-timebar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 5rem;
+    width: 100%;
+    color: white;
+}
+
+.progressbar {
+    background-color: white;
+    height: 5px;
+    width: 100%;
+}
+
+.progressbar-completed {
+    width: 0%;
+    height: 5px;
+    background-color: rgb(141, 138, 175);
+    z-index: 10;
+}
+
+.time-mark {
+    font-family: "Rubik";
+    margin: 0 5px;
+}
+
+/* END BOTTOM BAR STYLING */
+
+/* START SIDEBAR STYLING */
+.sidebar {
+    background-color: rgb(32, 20, 44);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 23%;
+    min-width: 9rem;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.sidebar-album-cover {
+    width: 100%;
+    bottom: 9rem;
+    position: absolute;
+}
+
+.sidebar-pic {
+    width: 100%;
+    max-width: 15rem;
+}
+
+.sidebar-item {
+    flex-basis: 7rem;
+    margin-left: 2rem;
+    color: white;
+}
+
+.sidebar-text {
+    color: white;
+    font-size: clamp(1rem, 3vw, 9rem);
+    margin: 1rem;
+    margin-top: 2rem;
+    font-family: "Rubik";
+}
+
+/* END SIDEBAR STYLING */
+
+/* START SECTION STYLING */
+.page-section {
+    height: 100vh;
+    width: 77%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 3rem;
+}
+/* END SECTION STYLING */
+
+/* START MY SONGS SECTION STYLING */
+.my-songs {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.page-title {
+    font-size: 5vw;
+    margin-left: 2.8vw;
+    font-family: "Rubik";
+    font-weight: 100;
+
+    color: white;
+}
+
+#songs-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+    padding-bottom: 15rem;
+}
+
+.song-data-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 6rem;
+    padding: 1rem 0;
+    font-family: "Rubik";
+    color: white;
+}
+
+.dark-row {
+    background-color: rgb(0, 0, 0, 0.12);
+}
+
+.album-img-container {
+    height: 100%;
+    flex-basis: 15%;
+}
+
+.album-img {
+    height: 100%;
+}
+
+.song-title {
+    flex-basis: 25%;
+}
+
+.song-album {
+    flex-basis: 25%;
+}
+
+.song-artist {
+    flex-basis: 25%;
+}
+
+.song-duration {
+    text-align: end;
+    flex-basis: 10%;
+}
+
+.data-cell {
+    padding: 0 0.9rem;
+}
+
+.resume-button,
+.play-button,
+.remove-button {
+    color: white;
+}
+
+/* END MY SONG SECTION STYLING */
+
+/* START MY PLAYLISTS SECTION STYLING */
+#playlists-container {
+    padding: 1rem 3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: flex-start;
+    margin-top: -5rem;
+    padding-bottom: 9rem;
+}
+
+.playlist-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    color: white;
+    font-family: "Rubik";
+    font-size: 2vw;
+    height: 43vh;
+    max-height: 15rem;
+    height: clamp(3rem, 20vh, 15rem);
+    width: 24vw;
+    max-width: 9rem;
+    width: clamp(3rem, 15vw, 9rem);
+    margin: 5vw;
+    min-width: 15rem;
+}
+
+.card-album-img-container {
+    height: 70%;
+}
+
+.card-album-img {
+    height: 100%;
+}
+
+.card-playlist-info {
+    height: 15%;
+}
+
+.card-playlist-duration {
+    height: 15%;
+}
+/* END MY PLAYLISTS SECTION STYLING */
+
+/* START ADD MODAL STYLING */
+.modal-background {
+    height: 100%;
+    width: 100%;
+    background-color: rgb(0, 0, 0, 0.4);
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.exit-button {
+    display: inline;
+    font-size: 2rem;
+    text-align: right;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.modal-box {
+    height: 500px;
+    width: 800px;
+    margin: 10% auto;
+    background-color: rgb(52, 43, 92);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-content: center;
+    color: white;
+    font-family: "Rubik";
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.modal-title-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem;
+}
+
+.modal-title-container h1 {
+    color: white;
+    font-family: "Rubik";
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: flex-start;
+    align-content: center;
+}
+
+.modal-radio-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    height: 30px;
+}
+
+.add-info-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px;
+}
+
+.add-info-form {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-content: flex-start;
+}
+
+.input-item {
+    margin: 20px 50px;
+}
+
+.add-cover-img {
+    display: flex;
+    align-content: flex-start;
+    justify-content: center;
+    padding: 20px;
+    background-color: rgb(0, 0, 0, 0.4);
+    width: 40%;
+    height: 50%;
+}
+
+/* END ADD MODAL STYLING */
+
+/* START UTILITY CLASSES STYLING */
+
+.hide-section {
+    display: none;
+}
+
+/* END UTILITY CLASSES STYLING */

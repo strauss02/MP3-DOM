@@ -1,73 +1,25 @@
-# MP3 DOM
+# Purp MP3 Player
 
-The users of your MP3 player complained about it being inconvenient for regular (non-programmer) people. Time to build a GUI!
+welcome to the purp© music player.
+This revolutionary spotify clone will have your ears enjoying your favorite tunes in no time.
 
-Your task is to create a webpage that conveniently displays the songs and playlists in a player object. The player object will have the same structure as in your previous assignment.
+If you are a cyber4s teacher, know this:
+Once again I have found myself fiddling with extra features and css, so I had less time for refining and cleaning the code. Sorry for that!
 
-## General Instructions
+check it out now: https://strauss02.github.io/MP3-DOM/#
 
-1. Fork this repo into your account.
-2. Clone the forked repo to your computer.
-3. Create a new git branch for your work.
-4. Complete the requirements.
-5. Submit your work.
-6. May the odds be ever in your favor!
+Features:
 
-## Webpage Requirements
+🎹 An aesthetic, resizable and responsive app that automatically fits the screen size
 
-Your webpage should contain 2 lists:
+🔀 Automatically shuffle when play is pressed while nothing is playing
 
--   A list of the `songs` in the player, sorted by their titles
--   A list of the `playlists` in the player, sorted by their names
+🎸 See how much of the song has been played with dynamic time mark display
 
-### Songs
+⏳ Dynamic visual progress bar that shows the completed percentage
 
-Each song list item shall display the following details:
+🎵 Beautiful custom playlist icons
 
--   song `title`
--   `album` name
--   `artist` name
--   an image with the album's cover art (`coverArt`)
--   song `duration` (in `mm:ss` format, of course)
+🥁 You can add cover art for a new songs
 
-One song can be played at a time. There should be some indication of the currently playing song (the specific indication is up to you). Clicking on a song will change the indication of the currently playing song. We have already provided code that handles the click event for you.
-
-### Playlists
-
-Every playlist list item should display the following information:
-
--   playlist `name`
--   the number of songs in the playlist
--   the total duration of the playlist
-
-## Bonus Requirements
-
--   After a song begins to play, it automatically switches to the next one when the song duration has passed.
--   The color of the durations of songs should reflect their length. A duration of less than 2 min will show green, and will be gradually redder until it is completely red for durations that are above 7 min.
--   Anything else you can think of...
-
-## Technical Instructions
-
-You are provided with a template for your project:
-
--   an HTML file (`index.html`)
--   a linked, empty CSS file (`style.css`)
--   a linked JS script with a sample `player` object (`player.js`)
--   a linked JS script with a template for your code (`index.js`)
--   an `images` folder with the webpage icon and song cover art
-
-The HTML defines the basic structure of the page. There are 2 container elements - one for the songs and one for the playlists. You may add more structural elements to the HTML (headings etc.), but the songs and playlists themselves must be generated using JS, based on the `player` object.
-
-## Submission
-
-1. On GitHub, open a pull request from your branch to the main branch.
-2. **Do not merge the pull request!**
-3. Add the user `Cyber4sPopo` as collaborator to your repo.
-4. Submit a link to the pull request in Google Classroom.
-
-## Additional Remarks
-
--   **Avoid duplication!** Use JS functions and CSS classes wisely.
--   Maintain high coding standards. Keep your code readable, indented properly, commented and indicative.
--   Maintain a proper git workflow. Commit often, push often, write informative commit messages.
--   You are free to style your webpage however you like. Make it BEAUTIFUL!
+⏯ Control playback with forward, backward, play and pause buttons.
